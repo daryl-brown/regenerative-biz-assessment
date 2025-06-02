@@ -665,7 +665,7 @@ export function AssessmentForm() {
                 <div className="space-y-4">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Rate your business's current engagement with the community:
+                      Rate your business&#39;s current engagement with the community:
                     </label>
                     <select
                       value={formData.communityImpact.score}
@@ -747,7 +747,7 @@ export function AssessmentForm() {
                 <div className="space-y-4">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Rate your business's approach to innovation:
+                      Rate your business&#39;s approach to innovation:
                     </label>
                     <select
                       value={formData.innovationPotential.score}
@@ -1003,7 +1003,7 @@ export function AssessmentForm() {
           <div className="space-y-8">
             <h2 className="text-2xl font-bold text-gray-800 mb-6">Future Potential & Transformation</h2>
             <p className="mb-6 text-gray-600">
-              Let's explore your transformation goals and vision for the future.
+              Let&#39;s explore your transformation goals and vision for the future.
             </p>
             
             <div className="space-y-6">

@@ -17,7 +17,7 @@ export async function POST(request: Request) {
       businessName, 
       industry, 
       businessSize,
-      isMember,
+     /* REMOVE isMember, */
       memberId,
       step 
     } = data;
@@ -60,10 +60,10 @@ export async function POST(request: Request) {
       progressId: progressId
     });
     
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Progress update error:', error);
     return NextResponse.json(
-      { error: 'Failed to update progress', message: error.message },
+      { error: 'Failed to update progress', message: error instanceof Error ? error.message : String(error) },
       { status: 500 }
     );
   }

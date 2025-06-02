@@ -42,7 +42,7 @@ interface AssessmentData {
 }
 
 // Retry function for handling Claude API failures
-async function callClaudeAPI(content: string, attempt = 1): Promise<any> {
+async function callClaudeAPI(content: string, attempt = 1): Promise<unknown> {
   try {
     const response = await anthropic.messages.create({
       model: "claude-3-sonnet-20240229",
@@ -59,11 +59,10 @@ async function callClaudeAPI(content: string, attempt = 1): Promise<any> {
       .join('\n');
 
     return JSON.parse(responseText);
-
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error(`Claude API attempt ${attempt} failed:`, error);
 
-    if (attempt < 3 && error.status === 529) {
+    if (attempt < 3 && (error as { status?: number }).status === 529) {
       console.log(`Retrying in ${attempt * 2} seconds...`);
       await new Promise(res => setTimeout(res, attempt * 2000));
       return callClaudeAPI(content, attempt + 1);
@@ -268,7 +267,7 @@ Respond strictly in JSON format. Ensure all recommendations are specific, action
 
   const reportContent = await callClaudeAPI(prompt);
 
-  console.log("Generated JSON Report Structure:", Object.keys(reportContent));
+  console.log("Generated JSON Report Structure:", Object.keys(reportContent as object));
 
   return reportContent;
 }

@@ -252,9 +252,9 @@ export async function createPDFBuffer(
     });
 
     // Inject chart data into the script tag
-    let scriptPattern = '<script id="report-data" type="application/json">';
-    let scriptEndPattern = '</script>';
-    let scriptStartIndex = html.indexOf(scriptPattern);
+    const scriptPattern = '<script id="report-data" type="application/json">';
+    const scriptEndPattern = '</script>';
+    const scriptStartIndex = html.indexOf(scriptPattern);
     let scriptEndIndex = html.indexOf(scriptEndPattern, scriptStartIndex); // Find first occurrence after start
 
     if (scriptStartIndex !== -1 && scriptEndIndex !== -1) {

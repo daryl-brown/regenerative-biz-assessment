@@ -158,10 +158,10 @@ export async function POST(request: Request) {
       id: Date.now().toString()
     });
 
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Submission error:', error);
     return NextResponse.json(
-      { error: 'Failed to process submission', message: error.message },
+      { error: 'Failed to process submission', message: error instanceof Error ? error.message : String(error) },
       { status: 500 }
     );
   }

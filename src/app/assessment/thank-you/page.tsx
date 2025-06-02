@@ -1,11 +1,9 @@
 'use client';
 
-import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 
 export default function ThankYouPage() {
-  const searchParams = useSearchParams();
-  const id = searchParams.get('id');
+  // Removed unused searchParams
 
   return (
     <main className="min-h-screen bg-gray-50 py-12">

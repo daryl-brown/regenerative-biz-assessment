@@ -9,7 +9,7 @@ export default function Home() {
         </h1>
         
         <p className="text-xl text-gray-600">
-          Discover your business's regenerative potential and get a personalized transformation roadmap.
+          Discover your business&#39;s regenerative potential and get a personalized transformation roadmap.
         </p>
 
         <Link 
