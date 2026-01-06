@@ -37,14 +37,12 @@ export async function POST(request: Request) {
         email: email,
         phone: phone || "",
         businessName: businessName,
-        customField: {
-          industry: industry,
-          businessSize: businessSize,
-          assessmentStatus: 'In Progress',
-          assessmentStep: step,
-          progressId: progressId,
-          lastUpdated: new Date().toISOString()
-        },
+        assessment_industry: industry,
+        assessment_businessSize: businessSize,
+        assessment_status: 'In Progress',
+        assessment_step: step,
+        assessment_progressId: progressId,
+        assessment_lastUpdated: new Date().toISOString(),
         tags: ['Assessment In Progress']
       })
     });

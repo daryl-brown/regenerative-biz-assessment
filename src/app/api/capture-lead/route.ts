@@ -17,15 +17,13 @@ export async function POST(request: Request) {
       body: JSON.stringify({
         firstName: formData.firstName,
         lastName: formData.lastName,
-        phone: formData.phone, // Ensure phone is captured
+        phone: formData.phone,
         email: formData.email,
         businessName: formData.businessName,
-        customField: {
-          industry: formData.industry,
-          businessSize: formData.businessSize,
-          assessmentStatus: 'Started' // Marks the assessment as started
-        },
-        tags: ['Assessment Started'] // Adds an initial tag for tracking
+        assessment_industry: formData.industry,
+        assessment_businessSize: formData.businessSize,
+        assessment_status: 'Started',
+        tags: ['Assessment Started']
       })
     });
 

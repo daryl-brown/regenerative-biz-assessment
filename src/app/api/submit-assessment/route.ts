@@ -108,38 +108,28 @@ export async function POST(request: Request) {
         email: formData.email,
         phone: formData.phone,
         businessName: formData.businessName,
-        customField: {
-          industry: formData.industry,
-          businessSize: formData.businessSize,
-          assessmentStatus: 'Completed',
-          overallScore: overallScore.toFixed(1),
-          
-          // Include all assessment scores
-          resourceUseScore: scores.resourceUse,
-          wasteHandlingScore: scores.wasteHandling,
-          teamDevelopmentScore: scores.teamDevelopment,
-          communityImpactScore: scores.communityImpact,
-          supplyChainScore: scores.supplyChain,
-          innovationScore: scores.innovationPotential,
-          naturalCapitalScore: scores.naturalCapital,
-          socialCapitalScore: scores.socialCapital,
-          financialCapitalScore: scores.financialCapital,
-          culturalCapitalScore: scores.culturalCapital,
-          knowledgeCapitalScore: scores.knowledgeCapital,
-          
-          // Include transformation goals and preferences
-          transformationObjectives: transformationObjectives,
-          businessChallenge: formData.businessChallenge,
-          successVision: formData.successVision,
-          regenerativeReadiness: formData.regenerativeReadiness,
-          supportPreferences: supportPreferences,
-          
-          // Include link to full PDF report
-          pdfReportLink: pdfUrl,
-          
-          // Include the assessment date
-          assessmentDate: new Date().toISOString().split('T')[0]
-        },
+        assessment_industry: formData.industry,
+        assessment_businessSize: formData.businessSize,
+        assessment_status: 'Completed',
+        assessment_overallScore: overallScore.toFixed(1),
+        assessment_resourceUseScore: scores.resourceUse,
+        assessment_wasteHandlingScore: scores.wasteHandling,
+        assessment_teamDevelopmentScore: scores.teamDevelopment,
+        assessment_communityImpactScore: scores.communityImpact,
+        assessment_supplyChainScore: scores.supplyChain,
+        assessment_innovationScore: scores.innovationPotential,
+        assessment_naturalCapitalScore: scores.naturalCapital,
+        assessment_socialCapitalScore: scores.socialCapital,
+        assessment_financialCapitalScore: scores.financialCapital,
+        assessment_culturalCapitalScore: scores.culturalCapital,
+        assessment_knowledgeCapitalScore: scores.knowledgeCapital,
+        assessment_transformationObjectives: transformationObjectives,
+        assessment_businessChallenge: formData.businessChallenge,
+        assessment_successVision: formData.successVision,
+        assessment_regenerativeReadiness: formData.regenerativeReadiness,
+        assessment_supportPreferences: supportPreferences,
+        assessment_pdfReportLink: pdfUrl,
+        assessment_date: new Date().toISOString().split('T')[0],
         tags: ['Assessment Completed']
       })
     });
