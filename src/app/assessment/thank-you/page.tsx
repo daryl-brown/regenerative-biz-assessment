@@ -41,7 +41,7 @@ export default function ThankYouPage() {
             </p>
             <p className="flex items-start">
               <span className="text-blue-600 mr-2">✓</span>
-              <span>You'll receive your comprehensive PDF report via email within the next <strong>48 hours</strong></span>
+              <span>You&apos;ll receive your comprehensive PDF report via email within the next <strong>48 hours</strong></span>
             </p>
             <p className="flex items-start">
               <span className="text-blue-600 mr-2">✓</span>
@@ -53,7 +53,7 @@ export default function ThankYouPage() {
         <div className="bg-amber-50 border border-amber-200 rounded-lg p-6 mb-6 text-left">
           <h3 className="text-lg font-semibold text-amber-900 mb-2">Important Notice</h3>
           <p className="text-sm text-gray-700 mb-2">
-            This assessment report is <strong>indicative and educational only</strong>. It provides preliminary insights based on the information you've provided.
+            This assessment report is <strong>indicative and educational only</strong>. It provides preliminary insights based on the information you&apos;ve provided.
           </p>
           <p className="text-sm text-gray-700 mb-2">
             As a coaching business, we may not have all the information required for key investment decisions. Any actions you take based on the contents of this report are your own responsibility. You are advised to conduct your own due diligence and seek appropriate professional advice before making business decisions.
@@ -64,7 +64,7 @@ export default function ThankYouPage() {
         </div>
 
         <p className="text-sm text-gray-500 mb-6">
-          Please check your spam folder if you don't see the email within 48 hours
+          Please check your spam folder if you don&apos;t see the email within 48 hours
         </p>
 
         <Link
