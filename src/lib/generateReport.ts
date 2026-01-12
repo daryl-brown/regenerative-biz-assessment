@@ -53,10 +53,20 @@ async function callClaudeAPI(content: string, attempt = 1): Promise<unknown> {
     console.log('Claude API response received');
 
     // Ensure response is structured as JSON
-    const responseText = response.content
+    let responseText = response.content
       .filter(block => block.type === 'text')
       .map(block => block.type === 'text' ? block.text : '')
       .join('\n');
+
+    // Strip markdown code fences if present (```json ... ``` or ``` ... ```)
+    responseText = responseText.trim();
+    if (responseText.startsWith('```')) {
+      // Remove opening fence (```json or ```)
+      responseText = responseText.replace(/^```(?:json)?\n/, '');
+      // Remove closing fence
+      responseText = responseText.replace(/\n```$/, '');
+      responseText = responseText.trim();
+    }
 
     return JSON.parse(responseText);
   } catch (error: unknown) {
