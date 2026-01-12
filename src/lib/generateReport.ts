@@ -45,18 +45,37 @@ interface AssessmentData {
 async function callClaudeAPI(content: string, attempt = 1): Promise<unknown> {
   try {
     const response = await anthropic.messages.create({
-      model: "claude-3-sonnet-20240229",
-      max_tokens: 4000,
+      model: "claude-sonnet-4-5-20250929",
+      max_tokens: 16000,
       messages: [{ role: "user", content }]
     });
 
     console.log('Claude API response received');
+    console.log('Response stop_reason:', response.stop_reason);
 
     // Ensure response is structured as JSON
-    const responseText = response.content
+    let responseText = response.content
       .filter(block => block.type === 'text')
       .map(block => block.type === 'text' ? block.text : '')
       .join('\n');
+
+    console.log('Response text length:', responseText.length, 'characters');
+
+    // Strip markdown code fences if present (```json ... ``` or ``` ... ```)
+    responseText = responseText.trim();
+    if (responseText.startsWith('```')) {
+      // Remove opening fence (```json or ```)
+      responseText = responseText.replace(/^```(?:json)?\n/, '');
+      // Remove closing fence
+      responseText = responseText.replace(/\n```$/, '');
+      responseText = responseText.trim();
+    }
+
+    console.log('Cleaned response text length:', responseText.length, 'characters');
+
+    // Log first and last 200 chars for debugging
+    console.log('Response start:', responseText.substring(0, 200));
+    console.log('Response end:', responseText.substring(responseText.length - 200));
 
     return JSON.parse(responseText);
   } catch (error: unknown) {
