@@ -1,0 +1,887 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Regenerative Business Report</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Variables */
+        :root {
+            --primary: #007c5f;
+            --primary-light: #e0f5f0;
+            --secondary: #ffb700;
+            --secondary-light: #fff8e0;
+            --tertiary: #3e78b2;
+            --tertiary-light: #e6f2ff;
+            --dark: #333333;
+            --light: #ffffff;
+            --gray: #f4f4f4;
+            --gray-dark: #666666;
+        }
+        
+        /* Reset and Base */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--light);
+            color: var(--dark);
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            max-width: 100%;
+        }
+        
+        /* Print styles */
+        @media print {
+            body {
+                width: 210mm;
+                height: 297mm;
+                margin: 0;
+                padding: 0;
+            }
+            
+            .page-break {
+                page-break-before: always;
+                margin: 0;
+                padding: 0;
+                height: 0;
+            }
+            
+            .container, .section, .assessment-card, .callout, .next-steps {
+                page-break-inside: avoid;
+            }
+            
+            h2, h3 {
+                page-break-after: avoid;
+            }
+            
+            html, body {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+        }
+        
+        /* Cover page */
+        .cover-page {
+            position: relative;
+            min-height: 100vh;
+            background-color: var(--light);
+            overflow: hidden;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        
+        .cover-design {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+        
+        .circle {
+            position: absolute;
+            border-radius: 50%;
+        }
+        
+        .circle-1 {
+            width: 200px;
+            height: 200px;
+            background-color: var(--primary-light);
+            top: -50px;
+            left: -50px;
+        }
+        
+        .circle-2 {
+            width: 300px;
+            height: 300px;
+            background-color: var(--secondary-light);
+            bottom: -100px;
+            right: -100px;
+        }
+        
+        .accent-rect {
+            position: absolute;
+            width: 150px;
+            height: 300px;
+            background-color: var(--tertiary-light);
+            bottom: 100px;
+            left: -50px;
+            transform: rotate(45deg);
+        }
+        
+        .cover-content {
+            position: relative;
+            z-index: 1;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        
+        .logo-area {
+            margin-bottom: 40px;
+        }
+        
+        .report-title {
+            margin-top: 60px;
+            margin-bottom: 40px;
+        }
+        
+        .report-title h1 {
+            font-size: 42px;
+            font-weight: 700;
+            color: var(--primary);
+            line-height: 1.2;
+            margin-bottom: 10px;
+        }
+        
+        .report-title h2 {
+            font-size: 22px;
+            font-weight: 500;
+            color: var(--dark);
+            margin-bottom: 30px;
+        }
+        
+        .business-details {
+            margin-top: 60px;
+            padding: 30px;
+            background-color: var(--primary-light);
+            border-left: 6px solid var(--primary);
+            max-width: 500px;
+        }
+        
+        .business-details h3 {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: var(--primary);
+        }
+        
+        .business-details p {
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+        
+        .business-details .date {
+            margin-top: 20px;
+            font-style: italic;
+            color: var(--gray-dark);
+        }
+        
+        /* Content styling */
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            padding: 30px 40px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            border-bottom: 3px solid var(--primary);
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+        }
+        
+        .header h2 {
+            color: var(--primary);
+            font-size: 28px;
+            font-weight: 600;
+        }
+        
+        .section {
+            margin: 30px 0;
+            padding: 25px;
+            background: var(--gray);
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+        
+        .section:after {
+            content: "";
+            display: table;
+            clear: both;
+        }
+        
+        h1, h2, h3, h4 {
+            color: var(--primary);
+            margin-top: 20px;
+            margin-bottom: 15px;
+        }
+        
+        p {
+            margin-bottom: 15px;
+        }
+        
+        .callout {
+            background: var(--secondary-light);
+            padding: 20px;
+            border-left: 5px solid var(--secondary);
+            font-weight: 500;
+            margin: 25px 0;
+            border-radius: 0 10px 10px 0;
+        }
+        
+        .next-steps {
+            padding: 25px;
+            background: var(--tertiary-light);
+            border-left: 5px solid var(--tertiary);
+            font-weight: 400;
+            margin: 30px 0;
+            border-radius: 0 10px 10px 0;
+        }
+        
+        /* Charts and assessment scoring */
+        .chart-container {
+            width: 100%;
+            max-width: 500px;
+            height: 350px;
+            margin: 30px auto;
+            padding: 20px;
+            background-color: var(--light);
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+        
+        .score-display {
+            display: flex;
+            align-items: center;
+            margin: 15px 0;
+        }
+        
+        .score-bar {
+            height: 20px;
+            background-color: var(--gray);
+            border-radius: 10px;
+            width: 100%;
+            margin: 0 10px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .score-fill {
+            height: 100%;
+            background-color: var(--primary);
+            border-radius: 10px;
+        }
+        
+        .score-value {
+            font-weight: 600;
+            color: var(--primary);
+            width: 30px;
+            text-align: right;
+        }
+        
+        .score-label {
+            width: 20px;
+        }
+        
+        .assessment-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-top: 25px;
+        }
+        
+        .assessment-card {
+            background-color: var(--light);
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            margin-bottom: 20px;
+        }
+        
+        .assessment-card h3 {
+            color: var(--primary);
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid var(--primary-light);
+        }
+        
+        ul {
+            padding-left: 20px;
+            margin: 15px 0;
+        }
+        
+        li {
+            margin-bottom: 8px;
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 20px;
+            margin-top: 40px;
+            font-size: 14px;
+            color: var(--gray-dark);
+            border-top: 1px solid var(--gray);
+        }
+        
+        /* Additional styles for smaller sections */
+        .mini-section {
+            margin: 20px 0;
+        }
+        
+        /* Flexible design for dimensional assessment */
+        .dimension-section {
+            margin-bottom: 30px;
+        }
+        
+        /* Ensure content is formatted properly */
+        .content-list {
+            list-style-type: disc;
+            padding-left: 20px;
+        }
+        
+        .content-list li {
+            margin-bottom: 10px;
+        }
+        
+        /* Strategy cards for transformation roadmap */
+        .strategy-card {
+            background-color: var(--light);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+        
+        .strategy-card h3 {
+            color: var(--primary);
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid var(--primary-light);
+        }
+        
+        .strategy-card ul {
+            padding-left: 20px;
+        }
+        
+        .strategy-card p {
+            margin-top: 15px;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <!-- Hidden container for Claude's raw output (debug only) -->
+    <div id="report-content" style="display:none;">{{reportContent}}</div>
+
+    <!-- Cover Page -->
+    <div class="cover-page">
+        <div class="cover-design">
+            <div class="circle circle-1"></div>
+            <div class="circle circle-2"></div>
+            <div class="accent-rect"></div>
+        </div>
+        
+        <div class="cover-content">
+            <div>
+                <div class="logo-area">
+                    <div class="logo-area">
+                        <img src=data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMgAAAAyCAYAAAAZUZThAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAEpmlUWHRYTUw6Y29tLmFkb2JlLnhtcAAAAAAAPD94cGFja2V0IGJlZ2luPSfvu78nIGlkPSdXNU0wTXBDZWhpSHpyZVN6TlRjemtjOWQnPz4KPHg6eG1wbWV0YSB4bWxuczp4PSdhZG9iZTpuczptZXRhLyc+CjxyZGY6UkRGIHhtbG5zOnJkZj0naHR0cDovL3d3dy53My5vcmcvMTk5OS8wMi8yMi1yZGYtc3ludGF4LW5zIyc+CgogPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9JycKICB4bWxuczpBdHRyaWI9J2h0dHA6Ly9ucy5hdHRyaWJ1dGlvbi5jb20vYWRzLzEuMC8nPgogIDxBdHRyaWI6QWRzPgogICA8cmRmOlNlcT4KICAgIDxyZGY6bGkgcmRmOnBhcnNlVHlwZT0nUmVzb3VyY2UnPgogICAgIDxBdHRyaWI6Q3JlYXRlZD4yMDI1LTAyLTI4PC9BdHRyaWI6Q3JlYXRlZD4KICAgICA8QXR0cmliOkV4dElkPmRmMTdhYTgzLTQ1NTQtNDgwOC04NTI2LTMyMGE0ZDMyMDQ3YzwvQXR0cmliOkV4dElkPgogICAgIDxBdHRyaWI6RmJJZD41MjUyNjU5MTQxNzk1ODA8L0F0dHJpYjpGYklkPgogICAgIDxBdHRyaWI6VG91Y2hUeXBlPjI8L0F0dHJpYjpUb3VjaFR5cGU+CiAgICA8L3JkZjpsaT4KICAgPC9yZGY6U2VxPgogIDwvQXR0cmliOkFkcz4KIDwvcmRmOkRlc2NyaXB0aW9uPgoKIDxyZGY6RGVzY3JpcHRpb24gcmRmOmFib3V0PScnCiAgeG1sbnM6ZGM9J2h0dHA6Ly9wdXJsLm9yZy9kYy9lbGVtZW50cy8xLjEvJz4KICA8ZGM6dGl0bGU+CiAgIDxyZGY6QWx0PgogICAgPHJkZjpsaSB4bWw6bGFuZz0neC1kZWZhdWx0Jz5yZWdlbkFEdG0tMiAtIDE8L3JkZjpsaT4KICAgPC9yZGY6QWx0PgogIDwvZGM6dGl0bGU+CiA8L3JkZjpEZXNjcmlwdGlvbj4KCiA8cmRmOkRlc2NyaXB0aW9uIHJk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 alt="Regenerative Advantage™" style="max-width: 200px; height: auto;">
+                    </div>
+                </div>
+                
+                <div class="report-title">
+                    <h1>REGENERATIVE BUSINESS<br/>TRANSFORMATION REPORT</h1>
+                    <h2>Pathway to sustainable growth and positive impact</h2>
+                </div>
+            </div>
+            
+            <div class="business-details">
+                <h3>ASSESSMENT REPORT FOR:</h3>
+                <p><strong>{{businessName}}</strong></p>
+                <p>Industry: {{industry}}</p>
+                <p>Size: {{size}}</p>
+                <p class="date">Assessment Date: {{businessProfile.assessmentDate}}</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="page-break"></div>
+    
+    <!-- Executive Summary -->
+    <div class="container">
+        <div class="header">
+            <h2>Executive Summary</h2>
+        </div>
+        
+        <div class="section">
+            <div class="callout">
+                <h3>Overall Regenerative Score: {{overallScore}}/5</h3>
+                <p>{{transformationReadinessLevel}}</p>
+            </div>
+            
+            <h3>Key Insights</h3>
+            <p>{{keyInsights}}</p>
+            
+            <div class="chart-container">
+                <canvas id="scoreChart"></canvas>
+            </div>
+            
+            <div class="next-steps">
+                <h3>Summary Message</h3>
+                <p>{{summaryMessage}}</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="page-break"></div>
+    
+    <!-- Dimensional Assessment - Resource Use -->
+    <div class="container">
+        <div class="header">
+            <h2>Dimensional Assessment</h2>
+        </div>
+        
+        <div class="section dimension-section">
+            <h3>Resource Use</h3>
+            <div class="score-display">
+                <div class="score-value">{{resourceUseScore}}</div>
+                <div class="score-bar">
+                    <div class="score-fill" data-score="{{resourceUseScore}}"></div>
+                </div>
+                <div class="score-label">/5</div>
+            </div>
+            
+            <p><strong>Key Findings:</strong> {{resourceUseKeyFindings}}</p>
+            
+            <h4>Recommended Actions</h4>
+            <div class="strategy-card">
+                <h3>Immediate Wins</h3>
+                <ul id="resource-immediate-wins-list" class="content-list">
+                    <li>{{resourceUseRecommendations.immediateWins}}</li>
+                </ul>
+            </div>
+            
+            <div class="strategy-card">
+                <h3>Short-Term Strategies</h3>
+                <ul id="resource-short-term-list" class="content-list">
+                    <li>{{resourceUseRecommendations.shortTermStrategies}}</li>
+                </ul>
+            </div>
+            
+            <div class="strategy-card">
+                <h3>Long-Term Transformation</h3>
+                <ul id="resource-long-term-list" class="content-list">
+                    <li>{{resourceUseRecommendations.longTermTransformation}}</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="page-break"></div>
+    
+    <!-- Dimensional Assessment - Waste Handling -->
+    <div class="container">
+        <div class="section dimension-section">
+            <h3>Waste Handling</h3>
+            <div class="score-display">
+                <div class="score-value">{{wasteHandlingScore}}</div>
+                <div class="score-bar">
+                    <div class="score-fill" data-score="{{wasteHandlingScore}}"></div>
+                </div>
+                <div class="score-label">/5</div>
+            </div>
+            
+            <p><strong>Key Findings:</strong> {{wasteHandlingKeyFindings}}</p>
+            
+            <h4>Recommended Actions</h4>
+            <div class="strategy-card">
+                <h3>Immediate Wins</h3>
+                <ul id="waste-immediate-wins-list" class="content-list">
+                    <li>{{wasteHandlingRecommendations.immediateWins}}</li>
+                </ul>
+            </div>
+            
+            <div class="strategy-card">
+                <h3>Short-Term Strategies</h3>
+                <ul id="waste-short-term-list" class="content-list">
+                    <li>{{wasteHandlingRecommendations.shortTermStrategies}}</li>
+                </ul>
+            </div>
+            
+            <div class="strategy-card">
+                <h3>Long-Term Transformation</h3>
+                <ul id="waste-long-term-list" class="content-list">
+                    <li>{{wasteHandlingRecommendations.longTermTransformation}}</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    
+    <div class="page-break"></div>
+    
+    <!-- Dimensional Assessment - Team Development -->
+    <div class="container">
+        <div class="section dimension-section">
+            <h3>Team Development</h3>
+            <div class="score-display">
+                <div class="score-value">{{teamDevelopmentScore}}</div>
+                <div class="score-bar">
+                    <div class="score-fill" data-score="{{teamDevelopmentScore}}"></div>
+                </div>
+                <div class="score-label">/5</div>
+            </div>
+            
+            <p><strong>Key Findings:</strong> {{teamDevelopmentKeyFindings}}</p>
+            
+            <h4>Recommended Actions</h4>
+            <div class="strategy-card">
+                <h3>Immediate Wins</h3>
+                <ul id="team-immediate-wins-list" class="content-list">
+                    <li>{{teamDevelopmentRecommendations.immediateWins}}</li>
+                </ul>
+            </div>
+            
+            <div class="strategy-card">
+                <h3>Short-Term Strategies</h3>
+                <ul id="team-short-term-list" class="content-list">
+                    <li>{{teamDevelopmentRecommendations.shortTermStrategies}}</li>
+                </ul>
+            </div>
+            
+            <div class="strategy-card">
+                <h3>Long-Term Transformation</h3>
+                <ul id="team-long-term-list" class="content-list">
+                    <li>{{teamDevelopmentRecommendations.longTermTransformation}}</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    
+    <div class="page-break"></div>
+    
+    <!-- Dimensional Assessment - Community Impact -->
+    <div class="container">
+        <div class="section dimension-section">
+            <h3>Community Impact</h3>
+            <div class="score-display">
+                <div class="score-value">{{communityImpactScore}}</div>
+                <div class="score-bar">
+                    <div class="score-fill" data-score="{{communityImpactScore}}"></div>
+                </div>
+                <div class="score-label">/5</div>
+            </div>
+            
+            <p><strong>Key Findings:</strong> {{communityImpactKeyFindings}}</p>
+            
+            <h4>Recommended Actions</h4>
+            <div class="strategy-card">
+                <h3>Immediate Wins</h3>
+                <ul id="community-immediate-wins-list" class="content-list">
+                    <li>{{communityImpactRecommendations.immediateWins}}</li>
+                </ul>
+            </div>
+            
+            <div class="strategy-card">
+                <h3>Short-Term Strategies</h3>
+                <ul id="community-short-term-list" class="content-list">
+                    <li>{{communityImpactRecommendations.shortTermStrategies}}</li>
+                </ul>
+            </div>
+            
+            <div class="strategy-card">
+                <h3>Long-Term Transformation</h3>
+                <ul id="community-long-term-list" class="content-list">
+                    <li>{{communityImpactRecommendations.longTermTransformation}}</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    
+    <div class="page-break"></div>
+    
+    <!-- Transformation Roadmap -->
+    <div class="container">
+        <div class="header">
+            <h2>Transformation Roadmap</h2>
+        </div>
+        
+        <div class="section">
+            <div class="strategy-card">
+                <h3>0-3 Months: Quick Wins</h3>
+                <div id="quick-wins-container">
+                    {{transformationRoadmap.shortTerm.actions}}
+                </div>
+                <p><strong>Estimated Impact:</strong> {{transformationRoadmap.shortTerm.estimatedImpact}}</p>
+            </div>
+            
+            <div class="strategy-card">
+                <h3>3-6 Months: Building Momentum</h3>
+                <div id="momentum-container">
+                    {{transformationRoadmap.midTerm.actions}}
+                </div>
+                <p><strong>Estimated Impact:</strong> {{transformationRoadmap.midTerm.estimatedImpact}}</p>
+            </div>
+            
+            <div class="strategy-card">
+                <h3>6-12 Months: Systemic Change</h3>
+                <div id="systemic-container">
+                    {{transformationRoadmap.longTerm.actions}}
+                </div>
+                <p><strong>Estimated Impact:</strong> {{transformationRoadmap.longTerm.estimatedImpact}}</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="page-break"></div>
+    
+    <!-- Financial Implications -->
+    <div class="container">
+        <div class="header">
+            <h2>Financial Implications</h2>
+        </div>
+        
+        <div class="section">
+            <div class="assessment-grid">
+                <div class="assessment-card">
+                    <h3>Estimated Costs</h3>
+                    <p>{{financialImplications.estimatedCosts}}</p>
+                </div>
+                <div class="assessment-card">
+                    <h3>Potential Savings</h3>
+                    <p>{{financialImplications.potentialSavings}}</p>
+                </div>
+            </div>
+            <div class="assessment-grid" style="margin-top: 20px;">
+                <div class="assessment-card">
+                    <h3>New Revenue Opportunities</h3>
+                    <p>{{financialImplications.newRevenueOpportunities}}</p>
+                </div>
+                <div class="assessment-card">
+                    <h3>ROI Projection</h3>
+                    <p>{{financialImplications.ROIProjection}}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="page-break"></div>
+    
+    <!-- Closing Insights & Next Steps -->
+    <!-- Modify the "Closing Insights & Next Steps" section as follows -->
+<div class="container">
+    <div class="header">
+        <h2>Closing Insights & Next Steps</h2>
+    </div>
+    
+    <div class="section" style="margin-bottom: 15px; padding-bottom: 15px;"> <!-- reduced margins and padding -->
+        <div class="callout">
+            <p>{{closingInsights.motivationalMessage}}</p>
+        </div>
+        
+        <h3>Recommended Next Steps</h3>
+        <div class="strategy-card" style="margin-bottom: 10px;"> <!-- reduced margin -->
+            <ul id="next-steps-list" class="content-list">
+                <li>{{closingInsights.nextSteps}}</li>
+            </ul>
+        </div>
+    </div>
+    
+    <!-- Move the footer inside the section to keep it with content -->
+    <div class="footer" style="margin-top: 10px; padding-top: 10px;"> <!-- reduced margins -->
+        <p>© 2025 Regenerative Advantage™ - This report is confidential and intended solely for the use of the business named above.</p>
+    </div>
+</div>
+
+    <script id="report-data" type="application/json">
+        {
+            "resourceUse": 4,
+            "wasteHandling": 3,
+            "teamDevelopment": 5,
+            "communityImpact": 4,
+            "supplyChain": 3,
+            "innovationPotential": 5,
+            "naturalCapital": 4,
+            "socialCapital": 3,
+            "financialCapital": 4,
+            "culturalCapital": 3,
+            "knowledgeCapital": 5
+        }
+    </script>
+    
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            try {
+                // Get JSON from script tag
+                const reportData = JSON.parse(document.getElementById("report-data").textContent);
+                
+                // Create the radar chart
+                const ctx = document.getElementById('scoreChart').getContext('2d');
+                new Chart(ctx, {
+                    type: 'radar',
+                    data: {
+                        labels: [
+                            'Resource Use', 
+                            'Waste Handling', 
+                            'Team Development', 
+                            'Community Impact', 
+                            'Supply Chain', 
+                            'Innovation',
+                            'Natural Capital',
+                            'Social Capital',
+                            'Financial Capital',
+                            'Cultural Capital',
+                            'Knowledge Capital'
+                        ],
+                        datasets: [{
+                            label: 'Assessment Scores',
+                            data: [
+                                reportData.resourceUse,
+                                reportData.wasteHandling,
+                                reportData.teamDevelopment,
+                                reportData.communityImpact,
+                                reportData.supplyChain,
+                                reportData.innovationPotential,
+                                reportData.naturalCapital,
+                                reportData.socialCapital,
+                                reportData.financialCapital,
+                                reportData.culturalCapital,
+                                reportData.knowledgeCapital
+                            ],
+                            backgroundColor: 'rgba(0, 124, 95, 0.2)',
+                            borderColor: '#007c5f',
+                            borderWidth: 2,
+                            pointBackgroundColor: '#007c5f',
+                            pointRadius: 4
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            r: {
+                                beginAtZero: true,
+                                max: 5,
+                                ticks: { stepSize: 1 },
+                                pointLabels: {
+                                    font: {
+                                        size: 12
+                                    }
+                                }
+                            }
+                        },
+                        plugins: {
+                            legend: {
+                                display: false
+                            }
+                        }
+                    }
+                });
+    
+            } catch (error) {
+                console.error("Error generating Chart.js visualization:", error);
+            }
+            
+            // Add dynamic fill to score bars
+            document.querySelectorAll('.score-fill').forEach(fill => {
+                const score = parseFloat(fill.getAttribute('data-score'));
+                fill.style.width = `${(score / 5) * 100}%`;
+            });
+            
+            // Process lists from API responses
+            function processList(content, elementId) {
+                if (!content) return;
+                
+                const element = document.getElementById(elementId);
+                if (!element) return;
+                
+                // Check if the content appears to contain multiple items
+                if (content.includes('• ') || content.includes('- ') || content.includes('<li>')) {
+                    // Already has HTML list items
+                    if (content.includes('<li>')) {
+                        return;
+                    }
+                    
+                    // Split by bullet points or dashes
+                    const items = content.split(/•|-/).filter(item => item.trim());
+                    
+                    if (items.length > 1) {
+                        // Replace the existing list with new items
+                        element.innerHTML = '';
+                        items.forEach(item => {
+                            const li = document.createElement('li');
+                            li.textContent = item.trim();
+                            element.appendChild(li);
+                        });
+                    }
+                }
+            }
+            
+            // Process list containers
+            function processListContainer(containerId) {
+                const container = document.getElementById(containerId);
+                if (!container) return;
+                
+                const content = container.innerHTML.trim();
+                
+                // If content is already in a list format, do nothing
+                if (content.startsWith('<ul>') || content.startsWith('<ol>')) {
+                    return;
+                }
+                
+                // If content has bullet points, convert it to proper list
+                if (content.includes('• ') || content.includes('- ')) {
+                    const items = content.split(/•|-/).filter(item => item.trim());
+                    
+                    if (items.length > 0) {
+                        const ul = document.createElement('ul');
+                        ul.className = 'content-list';
+                        
+                        items.forEach(item => {
+                            const li = document.createElement('li');
+                            li.textContent = item.trim();
+                            ul.appendChild(li);
+                        });
+                        
+                        container.innerHTML = '';
+                        container.appendChild(ul);
+                    }
+                }
+            }
+            
+            // Process all dimension lists
+            processList(document.querySelector('#resource-immediate-wins-list li')?.textContent, 'resource-immediate-wins-list');
+            processList(document.querySelector('#resource-short-term-list li')?.textContent, 'resource-short-term-list');
+            processList(document.querySelector('#resource-long-term-list li')?.textContent, 'resource-long-term-list');
+            
+            processList(document.querySelector('#waste-immediate-wins-list li')?.textContent, 'waste-immediate-wins-list');
+            processList(document.querySelector('#waste-short-term-list li')?.textContent, 'waste-short-term-list');
+            processList(document.querySelector('#waste-long-term-list li')?.textContent, 'waste-long-term-list');
+            
+            processList(document.querySelector('#team-immediate-wins-list li')?.textContent, 'team-immediate-wins-list');
+            processList(document.querySelector('#team-short-term-list li')?.textContent, 'team-short-term-list');
+            processList(document.querySelector('#team-long-term-list li')?.textContent, 'team-long-term-list');
+            
+            processList(document.querySelector('#community-immediate-wins-list li')?.textContent, 'community-immediate-wins-list');
+            processList(document.querySelector('#community-short-term-list li')?.textContent, 'community-short-term-list');
+            processList(document.querySelector('#community-long-term-list li')?.textContent, 'community-long-term-list');
+            
+            processList(document.querySelector('#next-steps-list li')?.textContent, 'next-steps-list');
+            
+            // Process roadmap containers
+            processListContainer('quick-wins-container');
+            processListContainer('momentum-container');
+            processListContainer('systemic-container');
+            
+            // Special processing for cases where the backend provided ready-made HTML
+            document.querySelectorAll('.content-list').forEach(list => {
+                if (list.innerHTML.includes('<ul>')) {
+                    list.innerHTML = list.innerHTML.replace('<ul>', '').replace('</ul>', '');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
