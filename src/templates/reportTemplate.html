@@ -807,63 +807,16 @@
             
             // Process lists from API responses
             function processList(content, elementId) {
-                if (!content) return;
-                
-                const element = document.getElementById(elementId);
-                if (!element) return;
-                
-                // Check if the content appears to contain multiple items
-                if (content.includes('• ') || content.includes('- ') || content.includes('<li>')) {
-                    // Already has HTML list items
-                    if (content.includes('<li>')) {
-                        return;
-                    }
-                    
-                    // Split by bullet points or dashes
-                    const items = content.split(/•|-/).filter(item => item.trim());
-                    
-                    if (items.length > 1) {
-                        // Replace the existing list with new items
-                        element.innerHTML = '';
-                        items.forEach(item => {
-                            const li = document.createElement('li');
-                            li.textContent = item.trim();
-                            element.appendChild(li);
-                        });
-                    }
-                }
+                // This function is deprecated - lists are now properly formatted by the backend
+                // Keeping it as a no-op for backwards compatibility
+                return;
             }
             
             // Process list containers
             function processListContainer(containerId) {
-                const container = document.getElementById(containerId);
-                if (!container) return;
-                
-                const content = container.innerHTML.trim();
-                
-                // If content is already in a list format, do nothing
-                if (content.startsWith('<ul>') || content.startsWith('<ol>')) {
-                    return;
-                }
-                
-                // If content has bullet points, convert it to proper list
-                if (content.includes('• ') || content.includes('- ')) {
-                    const items = content.split(/•|-/).filter(item => item.trim());
-                    
-                    if (items.length > 0) {
-                        const ul = document.createElement('ul');
-                        ul.className = 'content-list';
-                        
-                        items.forEach(item => {
-                            const li = document.createElement('li');
-                            li.textContent = item.trim();
-                            ul.appendChild(li);
-                        });
-                        
-                        container.innerHTML = '';
-                        container.appendChild(ul);
-                    }
-                }
+                // This function is deprecated - lists are now properly formatted by the backend
+                // Keeping it as a no-op for backwards compatibility
+                return;
             }
             
             // Process all dimension lists
