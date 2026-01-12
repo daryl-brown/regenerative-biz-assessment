@@ -354,14 +354,22 @@ export function AssessmentForm() {
   // Form submission
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    
+
     const isValid = validateSection(currentStep);
     if (!isValid) return;
-    
+
     setIsSubmitting(true);
 
     try {
-      const response = await fetch('/api/submit-assessment', {
+      // Generate a unique ID for tracking
+      const submissionId = Date.now().toString();
+
+      // Immediately redirect to thank you page
+      router.push(`/assessment/thank-you?id=${submissionId}`);
+
+      // Fire the submission request in the background with keepalive
+      // This ensures the request completes even after page navigation
+      fetch('/api/submit-assessment', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -369,12 +377,12 @@ export function AssessmentForm() {
           isMember,
           memberId: memberId || undefined
         }),
+        keepalive: true // Ensures request continues after navigation
+      }).catch(error => {
+        // Log error but don't block the user experience
+        console.error('Background submission error:', error);
       });
 
-      if (!response.ok) throw new Error('Submission failed');
-      
-      const data = await response.json();
-      router.push(`/assessment/thank-you?id=${data.id}`);
     } catch (error) {
       console.error('Failed to submit assessment:', error);
       setIsSubmitting(false);
